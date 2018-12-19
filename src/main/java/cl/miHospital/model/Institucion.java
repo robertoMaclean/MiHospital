@@ -27,5 +27,8 @@ public class Institucion implements Serializable {
 	public void setNombre_institucion(String nombre_institucion) {
 		this.nombre_institucion = nombre_institucion;
 	}
+	public Integer getId(){
+		return this.id_institucion;
+	}
 	
 }

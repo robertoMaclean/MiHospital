@@ -1,4 +1,4 @@
-package cl.miHospital.Service;
+package cl.miHospital.service;
 
 import org.hibernate.Query;
 import org.hibernate.Session;

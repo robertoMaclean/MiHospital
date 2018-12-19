@@ -1,4 +1,4 @@
-package cl.miHospital.Service;
+package cl.miHospital.service;
 
 import java.util.Date;
 import java.util.List;
@@ -45,10 +45,12 @@ public class RetiroMedicamentoService {
 	public static Retiro_medicamento fillRetiroMedicamento(HttpServletRequest request){
 		String nombre = request.getParameter("nombre");
 		String hora = request.getParameter("hora");
-		Date fecha = Utils.stringToDate(request.getParameter("fecha"), "dd-MM-yyyy");
+		Date fecha = Utils.stringToDate(request.getParameter("fecha"), "yyyy-MM-dd");
 		String lugar = request.getParameter("lugar");
 		String paciente_rut = request.getParameter("paciente_rut");
 		String id_institucion = request.getParameter("id_institucion");
+		String dosis = request.getParameter("dosis");
+		System.out.print("dosis "+dosis);
 		Paciente paciente = PacienteService.getPaciente(paciente_rut);
 		Institucion institucion = InstitucionService.getInstitucion(id_institucion);
 		Retiro_medicamento retiroMedicamento = new Retiro_medicamento();
@@ -58,6 +60,7 @@ public class RetiroMedicamentoService {
 		retiroMedicamento.setLugar(lugar);
 		retiroMedicamento.setPaciente(paciente);
 		retiroMedicamento.setInstitucion(institucion);
+		retiroMedicamento.setDosis(dosis);
 		
 		return retiroMedicamento;
 	}

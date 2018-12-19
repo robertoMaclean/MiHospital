@@ -1,7 +1,11 @@
 package cl.miHospital.model;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
+
+
 
 
 import javax.persistence.Entity;
@@ -15,7 +19,6 @@ import javax.persistence.ManyToOne;
 public class Retiro_medicamento implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
-	
 
 	@Id
 	@GeneratedValue(strategy=GenerationType.AUTO)
@@ -52,7 +55,9 @@ public class Retiro_medicamento implements Serializable {
 	public void setHora(String hora) {
 		this.hora = hora;
 	}
-	public Date getFecha() {
+	public String getFecha() {
+		DateFormat dateFormatDiag = new SimpleDateFormat("dd/MM/yyyy");
+    	String fecha = dateFormatDiag.format(this.fecha);
 		return fecha;
 	}
 	public void setFecha(Date fecha) {
@@ -73,8 +78,20 @@ public class Retiro_medicamento implements Serializable {
 	public void setPaciente(Paciente paciente) {
 		this.paciente = paciente;
 	}
+	public String getNombrePaciente(){
+		return paciente.getNombre() + " " + paciente.getApellido();
+	}
+	public String getRutPaciente(){
+		return paciente.getRut();
+	}
 	public void setInstitucion(Institucion institucion) {
 		this.institucion = institucion;
 	}
+	
+	public String getNombreInstitucion(){
+		if(institucion!=null) return institucion.getNombre_institucion();
+		return "";
+	}
+	
 
 }

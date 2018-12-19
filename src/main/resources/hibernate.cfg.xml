@@ -7,7 +7,7 @@
     <session-factory>
         <!-- Connection settings -->
         <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/mihospital</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/mihospital?zeroDateTimeBehavior=convertToNull</property>
         <property name="hibernate.connection.username">root</property>
         <property name="hibernate.connection.password">teenage</property>
         
@@ -21,5 +21,6 @@
         <mapping class="cl.miHospital.model.Retiro_medicamento"/>
         <mapping class="cl.miHospital.model.Paciente"/>
         <mapping class="cl.miHospital.model.Institucion"/>
+        <mapping class="cl.miHospital.model.Usuario"/>
     </session-factory>
 </hibernate-configuration>

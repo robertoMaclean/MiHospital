@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import cl.miHospital.Service.RetiroMedicamentoService;
+
+import cl.miHospital.service.PacienteService;
+import cl.miHospital.service.RetiroMedicamentoService;
 import cl.miHospital.model.Retiro_medicamento;
 
 
@@ -47,5 +49,10 @@ public class RetiroMedicamentoController {
         message.put("message", "No se pudo realizar la solicitud. Hubo un problema en el servidor.");
         return new ResponseEntity<Object>(message, HttpStatus.BAD_REQUEST);
     }  
+    
+    @RequestMapping(value="/paciente_exist/{rut}", method=RequestMethod.GET)
+    public boolean deleteRetiroMedicamento(@PathVariable String rut) {	
+		return (PacienteService.getPaciente(rut)!=null);	
+    }
 	
 }
