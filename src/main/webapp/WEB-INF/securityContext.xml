@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans:beans xmlns="http://www.springframework.org/schema/security"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:beans="http://www.springframework.org/schema/beans"
+	xmlns:sec="http://www.springframework.org/schema/security"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+      http://www.springframework.org/schema/security
+      http://www.springframework.org/schema/security/spring-security-4.0.xsd
+      http://www.springframework.org/schema/beans
+      http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+      http://www.springframework.org/schema/context
+	  http://www.springframework.org/schema/context/spring-context-4.0.xsd">
+      	
+    <global-method-security secured-annotations="enabled" /> 
+    
+	<context:component-scan base-package="cl.miHospital.authentication" />
+	
+	<http pattern="/login" security="none"/> 
+    <http pattern="/angular/*" security="none"/>
+    <http pattern="/assets/*" security="none"/>    
+    
+    <http entry-point-ref="restAuthenticationEntryPoint" create-session="stateless" use-expressions="true"> 
+        <csrf disabled="true"/>  
+        <custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/> 
+        <intercept-url pattern="/login" access="permitAll" />
+        <intercept-url pattern="/usuario/*" access="hasAuthority('some')"/> 
+        <intercept-url pattern="/instituciones/*" access="hasAuthority('some')"/>
+        <intercept-url pattern="/*" access="hasAuthority('some')"/> 
+    </http>
+    
+    <beans:bean id="jwtAuthenticationFilter" class="cl.miHospital.authentication.JwtAuthenticationFilter">  
+        <beans:property name="authenticationManager" ref="authenticationManager" /> 
+        <beans:property name="authenticationSuccessHandler" ref="jwtAuthenticationSuccessHandler" />
+    </beans:bean>
+
+    <authentication-manager alias="authenticationManager">
+        <authentication-provider ref="jwtAuthenticationProvider" />  
+    </authentication-manager>
+    
+    <beans:bean id="jwtAuthenticationProvider" class="cl.miHospital.authentication.JwtAuthenticationProvider" /> 
+    <beans:bean id="restAuthenticationEntryPoint" class="cl.miHospital.authentication.RestAuthenticationEntryPoint" />	
+    <beans:bean id="jwtAuthenticationSuccessHandler" class="cl.miHospital.authentication.JwtAuthenticationSuccessHandler" />	
+				
+</beans:beans> 

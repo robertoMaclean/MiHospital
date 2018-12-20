@@ -3,10 +3,11 @@ package cl.miHospital.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Usuario implements Serializable {
@@ -23,10 +24,13 @@ public class Usuario implements Serializable {
 	private Integer es_some;
 	private String creado_por;
 	private Timestamp fecha_creacion;
-	private Integer id_institucion;
 	private Integer primer_ingreso;
 	private Integer acepta_condiciones;
 	private String telefono;
+	
+	@JoinColumn(name="id_institucion")
+    @OneToOne
+    private Institucion institucion;
 	
 	public String getRut() {
 		return rut;
@@ -89,11 +93,11 @@ public class Usuario implements Serializable {
 	public void setFecha_creacion(Timestamp fecha_creacion) {
 		this.fecha_creacion = fecha_creacion;
 	}
-	public Integer getId_institucion() {
-		return id_institucion;
+	public Institucion getInstitucion() {
+		return institucion;
 	}
-	public void setId_institucion(Integer id_institucion) {
-		this.id_institucion = id_institucion;
+	public void setInstitucion(Institucion institucion) {
+		this.institucion = institucion;
 	}
 	public Integer getPrimer_ingreso() {
 		return primer_ingreso;

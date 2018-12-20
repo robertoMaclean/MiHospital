@@ -5,6 +5,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import org.apache.commons.codec.digest.DigestUtils;
+
 public class Utils {
 	
 	public static Date stringToDate(String stringDate, String format){
@@ -17,4 +19,5 @@ public class Utils {
 			return null;
 		}		
 	}
+
 }
