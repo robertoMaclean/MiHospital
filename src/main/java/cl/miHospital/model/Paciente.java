@@ -33,6 +33,7 @@ public class Paciente {
 	}
 
 	public String getNombre() {
+		if(nombre==null) return "";
 		return nombre;
 	}
 
@@ -41,6 +42,7 @@ public class Paciente {
 	}
 
 	public String getApellido() {
+		if(apellido==null) return "";
 		return apellido;
 	}
 

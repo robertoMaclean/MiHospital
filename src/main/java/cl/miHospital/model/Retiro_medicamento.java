@@ -92,6 +92,5 @@ public class Retiro_medicamento implements Serializable {
 		if(institucion!=null) return institucion.getNombre_institucion();
 		return "";
 	}
-	
 
 }
