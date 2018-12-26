@@ -17,15 +17,15 @@
 	
 	<http pattern="/login" security="none"/> 
     <http pattern="/angular/*" security="none"/>
-    <http pattern="/assets/*" security="none"/>
-    <http pattern="/usuario/**" security="none"/>
+    <http pattern="/assets/*" security="none"/>    
     
     <http entry-point-ref="restAuthenticationEntryPoint" create-session="stateless" use-expressions="true"> 
         <csrf disabled="true"/>  
         <custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/> 
         <intercept-url pattern="/login" access="permitAll" />
-        <intercept-url pattern="/usuario/*" access="permitAll" /> 
-         
+        <intercept-url pattern="/usuario/*" access="hasAuthority('some')"/> 
+        <intercept-url pattern="/instituciones/*" access="hasAuthority('some')"/>
+        <intercept-url pattern="/*" access="hasAuthority('some')"/> 
     </http>
     
     <beans:bean id="jwtAuthenticationFilter" class="cl.miHospital.authentication.JwtAuthenticationFilter">  

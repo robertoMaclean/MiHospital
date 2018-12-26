@@ -30,7 +30,7 @@ public class UsuarioService {
 	public static Usuario getUsuario(String rut){
 		SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
         Session session = sessionFactory.openSession();
-        Query q = session.createQuery("from Usuario u where u.rut='" + rut + "'");
+        Query q = session.createQuery("from Usuario u where u.rut='" + rut + "' and u.es_some='1'");
         Usuario usuario =  (Usuario) q.uniqueResult();	 
         return usuario;
 	}
@@ -44,7 +44,8 @@ public class UsuarioService {
 	}
 	
 	public static boolean insertUsuario(HttpServletRequest request, ObjectNode message){
-		if(getUsuario(request.getParameter("rut"))!=null){
+		String rut = rutFormat(request.getParameter("rut"));
+		if(getUsuario(rut)!=null){
 			message.put("message", "El RUT ingresado ya existe!");
 			return false;
 		}
@@ -66,9 +67,55 @@ public class UsuarioService {
         
 	}
 	
+	public static boolean updateUsuario(HttpServletRequest request, String rut, ObjectNode message){
+		String newRut = request.getParameter("rut");
+		System.out.println(request.getParameter("nombres"));
+		System.out.println(request.getParameter("apellido"));
+		System.out.println(request.getParameter("correo"));
+		System.out.println(request.getParameter("id_institucion"));
+		newRut = rutFormat(newRut);	
+		if(newRut!=rut){
+			if(getUsuario(newRut)!=null){
+				message.put("message", "El RUT ingresado ya existe!");
+				return false;
+			}
+		}
+		Usuario usuario = getUsuario(rut);
+		setUsuario(request, usuario);
+		try{
+			SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
+			Session session = sessionFactory.openSession(); 
+			Transaction tx1 = session.beginTransaction();
+			session.save(usuario);
+	        tx1.commit();
+	        session.close();
+	        return true;
+	        
+		}catch(Exception e){
+			e.printStackTrace();
+			message.put("message", "Hubo un problema en el servidor");
+			return false;
+		}
+	}
+	
+	public static void setUsuario(HttpServletRequest request, Usuario usuario){
+		String nombres = request.getParameter("nombres");
+		String apellido = request.getParameter("apellido");
+		String correo = request.getParameter("correo");
+		String id_institucion = request.getParameter("id_institucion");
+		String telefono = request.getParameter("telefono");
+		String rut = rutFormat(request.getParameter("rut"));
+		Institucion institucion = InstitucionService.getInstitucion(id_institucion);
+		usuario.setNombres(nombres);
+		usuario.setApellido(apellido);
+		usuario.setCorreo(correo);
+		usuario.setInstitucion(institucion);
+		usuario.setTelefono(telefono);
+		usuario.setRut(rut);
+	}
+	
 	public static Usuario fillUsuario(HttpServletRequest request){
 		
-		String rut = request.getParameter("rut");
 		String nombres = request.getParameter("nombres");
 		String apellido = request.getParameter("apellido");
 		String correo = request.getParameter("correo");
@@ -76,6 +123,7 @@ public class UsuarioService {
 		String creado_por = request.getParameter("creado_por");
 		String id_institucion = request.getParameter("id_institucion");
 		String telefono = request.getParameter("telefono");
+		String rut = rutFormat(request.getParameter("rut"));
 		Institucion institucion = InstitucionService.getInstitucion(id_institucion);
 		Usuario usuario = new Usuario();
 		usuario.setNombres(nombres);
@@ -108,12 +156,11 @@ public class UsuarioService {
 		}		
 	}
 	
-	public static Usuario correctPassword(String username, String password, ObjectNode message){
+	public static Usuario correctPassword(String rut, String password, ObjectNode message){
+		rut =rutFormat(rut);
 		try{
-			SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
-			Session session =  sessionFactory.openSession();
-			Query query = session.createQuery("from Usuario u where u.rut='"+ username +"'");
-			Usuario user = (Usuario) query.uniqueResult();
+
+			Usuario user = getUsuario(rut);
 			if(user==null){
 				message.put("message", "La combinación usuario y contraseña no es correcta");
 			}
@@ -127,6 +174,14 @@ public class UsuarioService {
 			message.put("message", "El servidor no está disponible");
 		}
 		return null;
+	}
+	
+	private static String rutFormat(String rut){
+		String rutAux = rut.replace(".", "");
+		if(rut.split("-").length<2){
+			rutAux= rut.substring(0, rut.length()-1) + "-" +rut.substring(rut.length()-1);	
+		}
+		return rutAux;
 	}
 	
 	public static UserLoginResponse fillUserResponse (Usuario user){
@@ -149,8 +204,8 @@ public class UsuarioService {
 	
 	@Test
 	public void getUser(){
-		assertEquals(null, getUsuario("asdas"));
-		
+		//assertEquals(null, getUsuario("asdas"));
+		assertEquals(true, rutFormat("16.332.2331").equals("16332233-1"));
 	}
 
 }

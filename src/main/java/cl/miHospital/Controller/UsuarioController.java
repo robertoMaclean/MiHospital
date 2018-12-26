@@ -29,7 +29,7 @@ public class UsuarioController {
 	}
 	
 	@RequestMapping(value="/usuario/{rut}", method=RequestMethod.DELETE)
-    public ResponseEntity<Object> deleteRetiroMedicamento(@PathVariable String rut) {	
+    public ResponseEntity<Object> deleteUsuario(@PathVariable String rut) {	
 		if(UsuarioService.deleteUsuario(rut)){
 			return new ResponseEntity<Object>(HttpStatus.OK );
 		}
@@ -40,11 +40,24 @@ public class UsuarioController {
     }
     
     @RequestMapping(value="/usuario", method=RequestMethod.POST, consumes="application/x-www-form-urlencoded")
-    public ResponseEntity<Object> insertMedicamento(HttpServletRequest request) {
+    public ResponseEntity<Object> insertUsuario(HttpServletRequest request) {
     
     	ObjectMapper mapper = new ObjectMapper();
         ObjectNode message = mapper.createObjectNode();
     	if(UsuarioService.insertUsuario(request, message)){
+    		return new ResponseEntity<Object>(HttpStatus.OK );
+    	}
+    	
+        return new ResponseEntity<Object>(message, HttpStatus.BAD_REQUEST);
+    }  
+    
+    @RequestMapping(value="/usuario/{rut}", method=RequestMethod.PUT, consumes="application/x-www-form-urlencoded")
+    public ResponseEntity<Object> updateUsuario(HttpServletRequest request, @PathVariable String rut) {
+    
+    	ObjectMapper mapper = new ObjectMapper();
+        ObjectNode message = mapper.createObjectNode();
+        System.out.println(request.getParameter("rut"));
+    	if(UsuarioService.updateUsuario(request, rut,message)){
     		return new ResponseEntity<Object>(HttpStatus.OK );
     	}
     	
