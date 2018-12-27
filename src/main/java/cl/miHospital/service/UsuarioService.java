@@ -68,13 +68,8 @@ public class UsuarioService {
 	}
 	
 	public static boolean updateUsuario(HttpServletRequest request, String rut, ObjectNode message){
-		String newRut = request.getParameter("rut");
-		System.out.println(request.getParameter("nombres"));
-		System.out.println(request.getParameter("apellido"));
-		System.out.println(request.getParameter("correo"));
-		System.out.println(request.getParameter("id_institucion"));
-		newRut = rutFormat(newRut);	
-		if(newRut!=rut){
+		String newRut = rutFormat(request.getParameter("rut"));	
+		if(!newRut.equals(rut)){
 			if(getUsuario(newRut)!=null){
 				message.put("message", "El RUT ingresado ya existe!");
 				return false;
@@ -86,7 +81,7 @@ public class UsuarioService {
 			SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
 			Session session = sessionFactory.openSession(); 
 			Transaction tx1 = session.beginTransaction();
-			session.save(usuario);
+			session.update(usuario);
 	        tx1.commit();
 	        session.close();
 	        return true;

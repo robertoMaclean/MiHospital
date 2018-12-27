@@ -51,13 +51,13 @@ public class UsuarioController {
         return new ResponseEntity<Object>(message, HttpStatus.BAD_REQUEST);
     }  
     
-    @RequestMapping(value="/usuario/{rut}", method=RequestMethod.PUT, consumes="application/x-www-form-urlencoded")
+    @RequestMapping(value="/usuario/{rut}", method=RequestMethod.POST, consumes="application/x-www-form-urlencoded")
     public ResponseEntity<Object> updateUsuario(HttpServletRequest request, @PathVariable String rut) {
     
     	ObjectMapper mapper = new ObjectMapper();
         ObjectNode message = mapper.createObjectNode();
-        System.out.println(request.getParameter("rut"));
-    	if(UsuarioService.updateUsuario(request, rut,message)){
+        //System.out.println(request.getParameter("rut"));
+    	if(UsuarioService.updateUsuario(request, rut, message)){
     		return new ResponseEntity<Object>(HttpStatus.OK );
     	}
     	

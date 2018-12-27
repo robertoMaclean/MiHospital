@@ -16,18 +16,19 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 
 import cl.miHospital.service.PacienteService;
 import cl.miHospital.service.RetiroMedicamentoService;
+import cl.miHospital.service.UsuarioService;
 import cl.miHospital.model.Retiro_medicamento;
 
 
 @RestController
 public class RetiroMedicamentoController {
 	
-	@RequestMapping(value="/", method=RequestMethod.GET)
+	@RequestMapping(value="/retiro_medicamento", method=RequestMethod.GET)
     public List<Retiro_medicamento> getMedicamentos() {
 		return RetiroMedicamentoService.getRetiroMedicamento();
     }
     
-    @RequestMapping(value="/{id}", method=RequestMethod.DELETE)
+    @RequestMapping(value="/retiro_medicamento/{id}", method=RequestMethod.DELETE)
     public ResponseEntity<Object> deleteRetiroMedicamento(@PathVariable Integer id) {	
 		if(RetiroMedicamentoService.deleteRetiroMedicamento(id)){
 			return new ResponseEntity<Object>(HttpStatus.OK );
@@ -38,7 +39,7 @@ public class RetiroMedicamentoController {
 		return new ResponseEntity<Object>(message, HttpStatus.BAD_REQUEST);
     }
     
-    @RequestMapping(value="/", method=RequestMethod.POST, consumes="application/x-www-form-urlencoded")
+    @RequestMapping(value="/retiro_medicamento", method=RequestMethod.POST, consumes="application/x-www-form-urlencoded")
     public ResponseEntity<Object> insertMedicamento(HttpServletRequest request) {
     	Retiro_medicamento retiroMedicamento = RetiroMedicamentoService.fillRetiroMedicamento(request);
     	if(RetiroMedicamentoService.insertRetiroMedicamento(retiroMedicamento)){
@@ -50,7 +51,20 @@ public class RetiroMedicamentoController {
         return new ResponseEntity<Object>(message, HttpStatus.BAD_REQUEST);
     }  
     
-    @RequestMapping(value="/paciente_exist/{rut}", method=RequestMethod.GET)
+    @RequestMapping(value="/retiro_medicamento/{id}", method=RequestMethod.POST, consumes="application/x-www-form-urlencoded")
+    public ResponseEntity<Object> updateRetiroMedicamento(HttpServletRequest request, @PathVariable Integer id) {
+    
+    	ObjectMapper mapper = new ObjectMapper();
+        ObjectNode message = mapper.createObjectNode();
+        //System.out.println(request.getParameter("rut"));
+    	if(RetiroMedicamentoService.updateRetiroMedicamento(request, id, message)){
+    		return new ResponseEntity<Object>(HttpStatus.OK );
+    	}
+    	
+        return new ResponseEntity<Object>(message, HttpStatus.BAD_REQUEST);
+    }  
+    
+    @RequestMapping(value="/retiro_medicamento/paciente_exist/{rut}", method=RequestMethod.GET)
     public boolean deleteRetiroMedicamento(@PathVariable String rut) {	
 		return (PacienteService.getPaciente(rut)!=null);	
     }

@@ -81,14 +81,17 @@ public class Retiro_medicamento implements Serializable {
 	public String getNombrePaciente(){
 		return paciente.getNombre() + " " + paciente.getApellido();
 	}
-	public String getRutPaciente(){
+	public String getPaciente_rut(){
 		return paciente.getRut();
+	}
+	public Institucion getInstitucion(){
+		return this.institucion;
 	}
 	public void setInstitucion(Institucion institucion) {
 		this.institucion = institucion;
 	}
 	
-	public String getNombreInstitucion(){
+	public String getNombre_institucion(){
 		if(institucion!=null) return institucion.getNombre_institucion();
 		return "";
 	}

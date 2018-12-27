@@ -1,5 +1,6 @@
 package cl.miHospital.service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -11,9 +12,12 @@ import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import cl.miHospital.model.Institucion;
 import cl.miHospital.model.Paciente;
 import cl.miHospital.model.Retiro_medicamento;
+import cl.miHospital.model.Usuario;
 import cl.miHospital.util.HibernateUtility;
 import cl.miHospital.util.Utils;
 
@@ -42,6 +46,26 @@ public class RetiroMedicamentoService {
         return false;
 	}
 	
+	public static boolean updateRetiroMedicamento(HttpServletRequest request, Integer id, ObjectNode message){
+	
+		Retiro_medicamento retiroMedicamento = getRetiroMedicamento(id);
+		setRetiroMedicamento(request, retiroMedicamento);
+		try{
+			SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
+			Session session = sessionFactory.openSession(); 
+			Transaction tx1 = session.beginTransaction();
+			session.update(retiroMedicamento);
+	        tx1.commit();
+	        session.close();
+	        return true;
+	        
+		}catch(Exception e){
+			e.printStackTrace();
+			message.put("message", "Hubo un problema en el servidor");
+			return false;
+		}
+	}
+	
 	public static Retiro_medicamento fillRetiroMedicamento(HttpServletRequest request){
 		String nombre = request.getParameter("nombre");
 		String hora = request.getParameter("hora");
@@ -50,7 +74,6 @@ public class RetiroMedicamentoService {
 		String paciente_rut = request.getParameter("paciente_rut");
 		String id_institucion = request.getParameter("id_institucion");
 		String dosis = request.getParameter("dosis");
-		System.out.print("dosis "+dosis);
 		Paciente paciente = PacienteService.getPaciente(paciente_rut);
 		Institucion institucion = InstitucionService.getInstitucion(id_institucion);
 		Retiro_medicamento retiroMedicamento = new Retiro_medicamento();
@@ -63,6 +86,35 @@ public class RetiroMedicamentoService {
 		retiroMedicamento.setDosis(dosis);
 		
 		return retiroMedicamento;
+	}
+	
+	private static void setRetiroMedicamento(HttpServletRequest request, Retiro_medicamento retiroMedicamento){
+		String nombre="";
+		String lugar="";
+		String dosis="";
+		try {
+			nombre = new String(request.getParameter("nombre").getBytes("ISO-8859-1"), "UTF-8");
+			lugar = new String(request.getParameter("lugar").getBytes("ISO-8859-1"), "UTF-8");
+			dosis = new String(request.getParameter("dosis").getBytes("ISO-8859-1"), "UTF-8");
+		} catch (UnsupportedEncodingException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String hora = request.getParameter("hora");
+		Date fecha = Utils.stringToDate(request.getParameter("fecha"), "yyyy-MM-dd");
+		 
+		String paciente_rut = request.getParameter("paciente_rut");
+		String id_institucion = request.getParameter("id_institucion");
+		
+		Paciente paciente = PacienteService.getPaciente(paciente_rut);
+		Institucion institucion = InstitucionService.getInstitucion(id_institucion);
+		retiroMedicamento.setNombre(nombre);
+		retiroMedicamento.setHora(hora);
+		retiroMedicamento.setFecha(fecha);
+		retiroMedicamento.setLugar(lugar);
+		retiroMedicamento.setPaciente(paciente);
+		retiroMedicamento.setInstitucion(institucion);
+		retiroMedicamento.setDosis(dosis);
 	}
 
 	private static List<Retiro_medicamento> getObjects(String query){
