@@ -1,5 +1,6 @@
 package cl.miHospital.util;
 
+import java.io.UnsupportedEncodingException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -18,6 +19,15 @@ public class Utils {
 			e.printStackTrace();
 			return null;
 		}		
+	}
+	
+	public static String getStringUTF(String request){
+		try{
+			return new String(request.getBytes("ISO-8859-1"), "UTF-8");
+		}catch(UnsupportedEncodingException e){
+			e.printStackTrace();
+			return "";
+		}
 	}
 
 }

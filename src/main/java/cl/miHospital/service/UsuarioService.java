@@ -22,6 +22,7 @@ import cl.miHospital.object.JwtUserDto;
 import cl.miHospital.object.UserLoginResponse;
 import cl.miHospital.util.HibernateUtility;
 import cl.miHospital.util.JwtUtil;
+import cl.miHospital.util.Utils;
 
 
 
@@ -94,8 +95,8 @@ public class UsuarioService {
 	}
 	
 	public static void setUsuario(HttpServletRequest request, Usuario usuario){
-		String nombres = request.getParameter("nombres");
-		String apellido = request.getParameter("apellido");
+		String nombres =Utils.getStringUTF(request.getParameter("nombres"));
+		String apellido = Utils.getStringUTF(request.getParameter("apellido"));
 		String correo = request.getParameter("correo");
 		String id_institucion = request.getParameter("id_institucion");
 		String telefono = request.getParameter("telefono");
@@ -111,10 +112,10 @@ public class UsuarioService {
 	
 	public static Usuario fillUsuario(HttpServletRequest request){
 		
-		String nombres = request.getParameter("nombres");
-		String apellido = request.getParameter("apellido");
+		String nombres = Utils.getStringUTF(request.getParameter("nombres"));
+		String apellido = Utils.getStringUTF(request.getParameter("apellido"));
 		String correo = request.getParameter("correo");
-		String contrasena = DigestUtils.md5Hex(request.getParameter("contrasena"));
+		String contrasena = DigestUtils.md5Hex(Utils.getStringUTF(request.getParameter("contrasena")));
 		String creado_por = request.getParameter("creado_por");
 		String id_institucion = request.getParameter("id_institucion");
 		String telefono = request.getParameter("telefono");

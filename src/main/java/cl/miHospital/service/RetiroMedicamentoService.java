@@ -1,6 +1,5 @@
 package cl.miHospital.service;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +16,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import cl.miHospital.model.Institucion;
 import cl.miHospital.model.Paciente;
 import cl.miHospital.model.Retiro_medicamento;
-import cl.miHospital.model.Usuario;
 import cl.miHospital.util.HibernateUtility;
 import cl.miHospital.util.Utils;
 
@@ -67,13 +65,15 @@ public class RetiroMedicamentoService {
 	}
 	
 	public static Retiro_medicamento fillRetiroMedicamento(HttpServletRequest request){
-		String nombre = request.getParameter("nombre");
+
+		String nombre = Utils.getStringUTF(request.getParameter("nombre"));
+		String lugar = Utils.getStringUTF(request.getParameter("lugar"));
+		String dosis = Utils.getStringUTF(request.getParameter("dosis"));
+
 		String hora = request.getParameter("hora");
 		Date fecha = Utils.stringToDate(request.getParameter("fecha"), "yyyy-MM-dd");
-		String lugar = request.getParameter("lugar");
 		String paciente_rut = request.getParameter("paciente_rut");
 		String id_institucion = request.getParameter("id_institucion");
-		String dosis = request.getParameter("dosis");
 		Paciente paciente = PacienteService.getPaciente(paciente_rut);
 		Institucion institucion = InstitucionService.getInstitucion(id_institucion);
 		Retiro_medicamento retiroMedicamento = new Retiro_medicamento();
@@ -89,17 +89,11 @@ public class RetiroMedicamentoService {
 	}
 	
 	private static void setRetiroMedicamento(HttpServletRequest request, Retiro_medicamento retiroMedicamento){
-		String nombre="";
-		String lugar="";
-		String dosis="";
-		try {
-			nombre = new String(request.getParameter("nombre").getBytes("ISO-8859-1"), "UTF-8");
-			lugar = new String(request.getParameter("lugar").getBytes("ISO-8859-1"), "UTF-8");
-			dosis = new String(request.getParameter("dosis").getBytes("ISO-8859-1"), "UTF-8");
-		} catch (UnsupportedEncodingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
+		String nombre = Utils.getStringUTF(request.getParameter("nombre"));
+		String lugar = Utils.getStringUTF(request.getParameter("lugar"));
+		String dosis =Utils. getStringUTF(request.getParameter("dosis"));
+		
 		String hora = request.getParameter("hora");
 		Date fecha = Utils.stringToDate(request.getParameter("fecha"), "yyyy-MM-dd");
 		 
@@ -116,7 +110,7 @@ public class RetiroMedicamentoService {
 		retiroMedicamento.setInstitucion(institucion);
 		retiroMedicamento.setDosis(dosis);
 	}
-
+	
 	private static List<Retiro_medicamento> getObjects(String query){
 		try {
 			SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
