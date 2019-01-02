@@ -31,7 +31,7 @@ public class UsuarioService {
 	public static Usuario getUsuario(String rut){
 		SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
         Session session = sessionFactory.openSession();
-        Query q = session.createQuery("from Usuario u where u.rut='" + rut + "' and u.es_some='1'");
+        Query q = session.createQuery("from Usuario u where u.rut='" + rut + "'");
         Usuario usuario =  (Usuario) q.uniqueResult();	 
         return usuario;
 	}
