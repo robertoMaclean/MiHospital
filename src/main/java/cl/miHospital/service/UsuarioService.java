@@ -155,7 +155,6 @@ public class UsuarioService {
 	public static Usuario correctPassword(String rut, String password, ObjectNode message){
 		rut =rutFormat(rut);
 		try{
-
 			Usuario user = getUsuario(rut);
 			if(user==null){
 				message.put("message", "La combinación usuario y contraseña no es correcta");
@@ -196,6 +195,39 @@ public class UsuarioService {
 		
 		return userRes;
 		
+	}
+	
+	public static boolean SetPassword(HttpServletRequest request, ObjectNode message, String rut){
+//		String oldPassword = Utils.getStringUTF(request.getParameter("old_password"));
+		String newPassword = Utils.getStringUTF(request.getParameter("new_password"));
+		Usuario usuario = getUsuario(rut);
+		if(usuario!=null){
+			usuario.setContrasena(DigestUtils.md5Hex(newPassword));
+			try{
+				SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
+				Session session = sessionFactory.openSession(); 
+				Transaction tx1 = session.beginTransaction();
+				session.update(usuario);
+		        tx1.commit();
+		        session.close();
+		        return true;
+			}catch(Exception e){
+				e.printStackTrace();
+				message.put("message", "Hubo un problema en el servidor");
+				return false;
+			}	
+		}else{
+			message.put("message", "El rut ingresado no existe en los registros");
+			return false;
+		}
+		
+	}
+	
+	private static boolean passwordMatch(String password, Usuario usuario){
+		if(usuario!=null){
+			return (DigestUtils.md5Hex(password).equals(usuario.getContrasena()));
+		}
+		return false;
 	}
 	
 	@Test

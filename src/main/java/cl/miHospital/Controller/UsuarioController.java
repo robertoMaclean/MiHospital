@@ -79,4 +79,17 @@ public class UsuarioController {
 		}
 		return new ResponseEntity<Object>(message, HttpStatus.BAD_REQUEST);
 	}
+    
+    @RequestMapping(value="/usuario/set_password/{rut}", method=RequestMethod.POST, consumes="application/x-www-form-urlencoded")
+    public ResponseEntity<Object> updateUsuarioPassword(HttpServletRequest request, @PathVariable String rut) {
+    
+    	ObjectMapper mapper = new ObjectMapper();
+        ObjectNode message = mapper.createObjectNode();
+        //System.out.println(request.getParameter("rut"));
+    	if(UsuarioService.SetPassword(request, message, rut)){
+    		return new ResponseEntity<Object>(HttpStatus.OK );
+    	}
+    	
+        return new ResponseEntity<Object>(message, HttpStatus.BAD_REQUEST);
+    }  
 }
