@@ -1,8 +1,9 @@
 package cl.miHospital.service;
 
 import static org.junit.Assert.assertEquals;
-
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,11 +21,10 @@ import cl.miHospital.model.Institucion;
 import cl.miHospital.model.Usuario;
 import cl.miHospital.object.JwtUserDto;
 import cl.miHospital.object.UserLoginResponse;
+import cl.miHospital.object.UsuarioResponse;
 import cl.miHospital.util.HibernateUtility;
 import cl.miHospital.util.JwtUtil;
 import cl.miHospital.util.Utils;
-
-
 
 public class UsuarioService {
 	
@@ -36,13 +36,26 @@ public class UsuarioService {
         return usuario;
 	}
 	
-	public static List<Usuario> getUsuarios(){
+	public static Set<UsuarioResponse> getUsuarios(){
 		SessionFactory sessionFactory = HibernateUtility.getSessionFactory();
         Session session = sessionFactory.openSession();
-        Query q = session.createQuery("from Usuario u where u.es_some='1'");
-        List<Usuario> usuarios =   q.list();	 
-        return usuarios;
+        Query q = session.createQuery("select u.nombres, u.apellido, u.rut, u.correo, u.telefono, u.institucion from Usuario u where u.es_some='1'");
+        List<Object> usuarios =   q.list();
+        Set<UsuarioResponse> usuariosResponse = new HashSet<UsuarioResponse>();;
+        for(int i =0; i< usuarios.size(); i++){
+        	UsuarioResponse usuario = new UsuarioResponse();
+        	usuario.setNombres((String)((Object[])usuarios.get(i))[0]);
+        	usuario.setApellido((String)((Object[])usuarios.get(i))[1]);
+        	usuario.setRut((String)((Object[])usuarios.get(i))[2]);
+        	usuario.setCorreo((String)((Object[])usuarios.get(i))[3]);
+        	usuario.setTelefono((String)((Object[])usuarios.get(i))[4]);
+        	usuario.setInstitucion((Institucion)((Object[])usuarios.get(i))[5]);
+        	usuariosResponse.add(usuario);
+        }
+
+        return usuariosResponse;
 	}
+
 	
 	public static boolean insertUsuario(HttpServletRequest request, ObjectNode message){
 		String rut = rutFormat(request.getParameter("rut"));
@@ -233,7 +246,7 @@ public class UsuarioService {
 	@Test
 	public void getUser(){
 		//assertEquals(null, getUsuario("asdas"));
-		assertEquals(true, rutFormat("16.332.2331").equals("16332233-1"));
+		//assertEquals(true, rutFormat("16.332.2331").equals("16332233-1"));
 	}
 
 }

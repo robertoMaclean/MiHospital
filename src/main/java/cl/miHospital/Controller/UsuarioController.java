@@ -1,6 +1,6 @@
 package cl.miHospital.Controller;
 
-import java.util.List;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,13 +18,14 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import cl.miHospital.model.Usuario;
 import cl.miHospital.object.UserLoginRequest;
 import cl.miHospital.object.UserLoginResponse;
+import cl.miHospital.object.UsuarioResponse;
 import cl.miHospital.service.UsuarioService;
 
 @RestController
 public class UsuarioController {
 	
 	@RequestMapping(value="/usuario", method=RequestMethod.GET)
-	public List<Usuario> getUsuarios(){
+	public Set<UsuarioResponse> getUsuarios(){
 		return UsuarioService.getUsuarios();
 	}
 	
