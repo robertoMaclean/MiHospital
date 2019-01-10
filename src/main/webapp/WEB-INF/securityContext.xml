@@ -15,14 +15,14 @@
     
 	<context:component-scan base-package="cl.miHospital.authentication" />
 	
-	<http pattern="/login" security="none"/> 
-    <http pattern="/*" security="none"/>     
+		<http pattern="/login" security="none"/> 
+   	<http pattern="/" security="none"/>      
     
     <http entry-point-ref="restAuthenticationEntryPoint" create-session="stateless" use-expressions="true"> 
         <csrf disabled="true"/>  
         <custom-filter before="FORM_LOGIN_FILTER" ref="jwtAuthenticationFilter"/> 
         <intercept-url pattern="/login" access="permitAll" />
-        <intercept-url pattern="/usuario/*" access="hasAuthority('some')"/> 
+        <intercept-url pattern="/usuario" access="hasAuthority('some')"/> 
         <intercept-url pattern="/instituciones/*" access="hasAuthority('some')"/>
     </http>
     
