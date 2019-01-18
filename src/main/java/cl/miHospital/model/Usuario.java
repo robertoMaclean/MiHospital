@@ -8,8 +8,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
+import javax.persistence.Table;
 
 @Entity
+@Table(name = "usuario") 
 public class Usuario implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
